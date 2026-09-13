@@ -66,21 +66,21 @@ async function weatherBusca(latitudeParam, longitudeParam) {
     uriBusca.searchParams.append('latitude', latitudeParam);
     uriBusca.searchParams.append('longitude', longitudeParam);
     uriBusca.searchParams.append('timezone', 'auto');
-    uriBusca.searchParams.append('current', ["temperature_2m", "relative_humidity_2m", "apparent_temperature"]);
+    uriBusca.searchParams.append('current', 'temperature_2m,relative_humidity_2m,apparent_temperature');
 
     // Consulta a API
     const response = await fetch(uriBusca);
 
     // Tratamento de Erro - problemas de consulta
     if(!response.ok) {
-        throw new Error(`[ERRO]: Erro com HTTP -> [DETALHES]: ${responses.status}`);
+        throw new Error(`[ERRO]: Erro com HTTP -> [DETALHES]: ${response.status}`);
     }
 
     // Armazena a response como um JSON
     const dados = await response.json();
 
     // Valida se as informacoes nao sao nulas
-    if(!dadosGeocodificacao) {
+    if(!dados) {
         throw new Error(`Processamenta abortado, a API nao retornou dados`);
     }
 
