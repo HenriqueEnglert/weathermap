@@ -34,8 +34,14 @@ async function geocodingBusca(cidade) {
         throw new Error(`[ERRO]: Erro com HTTP -> [DETALHES]: ${response.status}`);
     }
 
-    // Aramazena a response como um JSON
+    // Armazena a response como um JSON
     const dadosGeocodificacao = await response.json();
+
+    // Valida se as informacoes nao sao nulas
+    if(!dadosGeocodificacao) {
+        throw new Error(`Processamenta abortado, a API nao retornou dados`);
+    }
+
     // Retorna informcaoes em JSON formatado
     return {
         name: dadosGeocodificacao.results[0].name,
@@ -61,18 +67,25 @@ async function weatherBusca(latitudeParam, longitudeParam) {
         current: ["temperature_2m", "relative_humidity_2m", "apparent_temperature"]
     };
     const url = "https://api.open-meteo.com/v1/forecast";
-    const responses = await fetchWeatherApi(url, params); // Consulta a API
 
-    // Processa a primeira localizacao
-    const response = responses[0];
+    // Consulta a API
+    const responses = await fetchWeatherApi(url, params); 
+
+    // Tratamento de Erro - problemas de consulta
+    if(!responses.ok) {
+        throw new Error(`[ERRO]: Erro com HTTP -> [DETALHES]: ${responses.status}`);
+    }
+
+    // Obtem a primeira localizacao retornada
+    const dados = responses[0];
 
     // Atributos para timezone e localizacao
-    const utcOffsetSeconds = response.utcOffsetSeconds();
-    const timezone = response.timezone();
-    const latitude = response.latitude();
-    const longitude = response.longitude();
+    const utcOffsetSeconds = dados.utcOffsetSeconds();
+    const timezone = dados.timezone();
+    const latitude = dados.latitude();
+    const longitude = dados.longitude();
 
-    //const current = response.current()!;
+    const current = dados.current();
 
     // Retorna informcaoes em JSON formatado
     return {
@@ -81,9 +94,9 @@ async function weatherBusca(latitudeParam, longitudeParam) {
         longitude: longitude,
         atual : {
             horario: new Date((Number(current.time()) + utcOffsetSeconds) * 1000),
-            //temperatura: current.variables(0)!.value(),
-            //umidade: current.variables(1)!.value(),
-            //sensacaoTermica: current.variables(2)!.value()
+            temperatura: current.variables(0).value(),
+            umidade: current.variables(1).value(),
+            sensacaoTermica: current.variables(2).value()
         }
     }
 
