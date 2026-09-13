@@ -4,6 +4,7 @@ const { fetchWeatherApi } = require('openmeteo');
 
 // URI da API Geocoding
 const geocodingURI = "https://geocoding-api.open-meteo.com/v1/search";
+const weatherAPIURI = "https://api.open-meteo.com/v1/forecast";
 
 /**
  * Consulta coordenadas geograficas e fuso horario de uma cidade utilizando a API Open-Meteo.
@@ -58,46 +59,41 @@ async function geocodingBusca(cidade) {
  * @returns Fuso horário, coordenadas e medições atuais (temperatura, umidade e sensação térmica).
  */
 async function weatherBusca(latitudeParam, longitudeParam) {
+    // Permite manipular a URI global
+    const uriBusca = new URL(weatherAPIURI);
 
     // Parametros de busca
-    const params = {
-        latitude: latitudeParam,
-        longitude: longitudeParam,
-        timezone: "auto",
-        current: ["temperature_2m", "relative_humidity_2m", "apparent_temperature"]
-    };
-    const url = "https://api.open-meteo.com/v1/forecast";
+    uriBusca.searchParams.append('latitude', latitudeParam);
+    uriBusca.searchParams.append('longitude', longitudeParam);
+    uriBusca.searchParams.append('timezone', 'auto');
+    uriBusca.searchParams.append('current', ["temperature_2m", "relative_humidity_2m", "apparent_temperature"]);
 
     // Consulta a API
-    const responses = await fetchWeatherApi(url, params); 
+    const response = await fetch(uriBusca);
 
     // Tratamento de Erro - problemas de consulta
-    if(!responses.ok) {
+    if(!response.ok) {
         throw new Error(`[ERRO]: Erro com HTTP -> [DETALHES]: ${responses.status}`);
     }
 
-    // Obtem a primeira localizacao retornada
-    const dados = responses[0];
+    // Armazena a response como um JSON
+    const dados = await response.json();
 
-    // Atributos para timezone e localizacao
-    const utcOffsetSeconds = dados.utcOffsetSeconds();
-    const timezone = dados.timezone();
-    const latitude = dados.latitude();
-    const longitude = dados.longitude();
-
-    const current = dados.current();
-
-    // Retorna informcaoes em JSON formatado
-    return {
-        timezone: timezone,
-        latitude: latitude,
-        longitude: longitude,
-        atual : {
-            horario: new Date((Number(current.time()) + utcOffsetSeconds) * 1000),
-            temperatura: current.variables(0).value(),
-            umidade: current.variables(1).value(),
-            sensacaoTermica: current.variables(2).value()
-        }
+    // Valida se as informacoes nao sao nulas
+    if(!dadosGeocodificacao) {
+        throw new Error(`Processamenta abortado, a API nao retornou dados`);
     }
 
+    // Retorna informacoes em JSON formatado
+    return {
+        timezone: dados.timezone,
+        latitude: dados.latitude,
+        longitude: dados.longitude,
+        atual: {
+            horario: new Date(dados.current.time),
+            temperatura: dados.current.temperature_2m,
+            humidade: dados.current.relative_humidity_2m,
+            sensasaoTermica: dados.current.apparent_temperature
+        }
+    }
 }
