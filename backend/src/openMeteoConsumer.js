@@ -20,6 +20,11 @@ const weatherAPIURI = "https://api.open-meteo.com/v1/forecast";
  * ```
  */
 async function geocodingBusca(cidade) {
+
+    if(cidade == null || cidade == '') {
+        throw new Error('Informe uma cidade antes de realizar a pesquisa!')
+    }
+
     // Permite manipular a URI global
     const URIBusca = new URL(geocodingURI);
     
@@ -32,7 +37,8 @@ async function geocodingBusca(cidade) {
 
     // Tratamento de Erro - problemas de consulta
     if(!response.ok) {
-        throw new Error(`[ERRO]: Erro com HTTP -> [DETALHES]: ${response.status}`);
+        // Adicionar um logger???
+        throw new Error(`[ERRO]: Erro com a consulta -> [DETALHES]: ${response.status}`);
     }
 
     // Armazena a response como um JSON
@@ -40,7 +46,7 @@ async function geocodingBusca(cidade) {
 
     // Valida se as informacoes nao sao nulas
     if(!dadosGeocodificacao) {
-        throw new Error(`Processamenta abortado, a API nao retornou dados`);
+        throw new Error(`Cidade nao encontrada. Verifique o nome de consulta.`);
     }
 
     // Retorna informcaoes em JSON formatado
@@ -73,7 +79,7 @@ async function weatherBusca(latitudeParam, longitudeParam) {
 
     // Tratamento de Erro - problemas de consulta
     if(!response.ok) {
-        throw new Error(`[ERRO]: Erro com HTTP -> [DETALHES]: ${response.status}`);
+        throw new Error(`[ERRO]: Erro com a consulta -> [DETALHES]: ${response.status}`);
     }
 
     // Armazena a response como um JSON
@@ -81,7 +87,7 @@ async function weatherBusca(latitudeParam, longitudeParam) {
 
     // Valida se as informacoes nao sao nulas
     if(!dados) {
-        throw new Error(`Processamenta abortado, a API nao retornou dados`);
+        throw new Error(`Cidade nao encontrada. Verifique o nome de consulta.`);
     }
 
     // Retorna informacoes em JSON formatado
