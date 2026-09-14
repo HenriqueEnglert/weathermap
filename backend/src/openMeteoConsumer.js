@@ -53,7 +53,8 @@ async function geocodingBusca(cidade) {
     return {
         name: dadosGeocodificacao.results[0].name,
         latitude: dadosGeocodificacao.results[0].latitude,
-        longitude: dadosGeocodificacao.results[0].longitude
+        longitude: dadosGeocodificacao.results[0].longitude,
+        country: dadosGeocodificacao.results[0].country
     }
 }
 
@@ -72,7 +73,9 @@ async function weatherBusca(latitudeParam, longitudeParam) {
     uriBusca.searchParams.append('latitude', latitudeParam);
     uriBusca.searchParams.append('longitude', longitudeParam);
     uriBusca.searchParams.append('timezone', 'auto');
-    uriBusca.searchParams.append('current', 'temperature_2m,relative_humidity_2m,apparent_temperature');
+    uriBusca.searchParams.append('current', 
+        'temperature_2m, relative_humidity_2m, apparent_temperature, weather_code, wind_speed_10m'
+    );
 
     // Consulta a API
     const response = await fetch(uriBusca);
@@ -92,14 +95,10 @@ async function weatherBusca(latitudeParam, longitudeParam) {
 
     // Retorna informacoes em JSON formatado
     return {
-        timezone: dados.timezone,
-        latitude: dados.latitude,
-        longitude: dados.longitude,
-        atual: {
-            horario: new Date(dados.current.time),
-            temperatura: dados.current.temperature_2m,
-            humidade: dados.current.relative_humidity_2m,
-            sensasaoTermica: dados.current.apparent_temperature
-        }
+        temperatura: dados.current.temperature_2m,
+        umidade: dados.current.relative_humidity_2m,
+        sensacaoTermica: dados.current.apparent_temperature,
+        weatherCode: dados.current.weather_code,
+        windSpeed: dados.current.wind_speed_10m
     }
 }
