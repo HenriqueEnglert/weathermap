@@ -45,7 +45,7 @@ async function geocodingBusca(cidade) {
     const dadosGeocodificacao = await response.json();
 
     // Valida se as informacoes nao sao nulas
-    if(!dadosGeocodificacao) {
+    if(!dadosGeocodificacao || !dadosGeocodificacao.results || dadosGeocodificacao.results.length == 0) {
         throw new Error(`Cidade nao encontrada. Verifique o nome de consulta.`);
     }
 
@@ -74,7 +74,7 @@ async function weatherBusca(latitudeParam, longitudeParam) {
     uriBusca.searchParams.append('longitude', longitudeParam);
     uriBusca.searchParams.append('timezone', 'auto');
     uriBusca.searchParams.append('current', 
-        'temperature_2m, relative_humidity_2m, apparent_temperature, weather_code, wind_speed_10m'
+        'temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m'
     );
 
     // Consulta a API
@@ -102,3 +102,8 @@ async function weatherBusca(latitudeParam, longitudeParam) {
         windSpeed: dados.current.wind_speed_10m
     }
 }
+
+module.exports = {
+    geocodingBusca,
+    weatherBusca
+};
