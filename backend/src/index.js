@@ -1,10 +1,19 @@
 // import { geocodingBusca } from "./openMeteoConsumer";
-const { geocodingBusca } = require('./openMeteoConsumer');
-const { weatherBusca } = require('./openMeteoConsumer');
+const { geocodingBusca, weatherBusca } = require('./openMeteoConsumer');
 
 const express = require('express');
+const cors = require('cors');
+
 const app = express();
+
 const port = 3000;
+
+// Permite as requisicoes vindas do endereco do frontend
+app.use(cors({
+    origin: ['http://localhost:5173'],
+    methods: ['GET', 'POST', 'DELETE', 'UPDATE'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Access-Control-Allow-Origin']
+}));
 
 // Parametros nomeados - capturam o seu segmento da requisicao -> :nome_parametro
 app.get('/api/weather/:cidade', async (req, res) => {
