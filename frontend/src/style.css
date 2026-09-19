@@ -26,6 +26,7 @@ h1 {
 }
 
 .digitarCidade {
+    background-color: #ffffff;
     width: 210px;
     flex: 1;
     padding: 12px;
@@ -35,4 +36,12 @@ h1 {
 .resultado {
     gap: 5px;
     margin-top: 30px;
+}
+
+.display-resultados {
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 15px;
+    text-align: center;
 }

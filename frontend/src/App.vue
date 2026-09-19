@@ -2,9 +2,7 @@
   import { ref } from 'vue';
 
   const cidade = ref('');
-
   const dados = ref(null);
-
   const erro = ref('');
   
   async function buscaClima() {
@@ -14,8 +12,9 @@
       // Manda requisicao HTTP ao backend
       const response = await fetch(`http://localhost:3000/api/weather/${cidade.value}`);
 
+      // Tratamento de erro - evita quebrar a pagina apos erro de requisicao
       if(!response.ok) {
-        throw new Error('Erro na requisicao ao backend');
+        throw new Error(`Erro de consulta: ${response.status}`);
       }
 
       // Armazena o response como JSON
@@ -27,6 +26,7 @@
       console.log(error.message);
     }
   }
+
 </script>
 
 <template>
@@ -49,20 +49,21 @@
     <div class="resultado">
       <h2> Clima </h2>
 
-      <div v-if="dados">
+      <div class="display-resultados" v-if="dados">
         <p class="resultado-clima"> Cidade: <span> {{ dados.cidade }} </span> </p>
         <p class="resultado-clima"> Temperatura: <span> {{ dados.weather.temperatura }} </span> </p>
-        <p class="resultado-clima"> Umidade: <span> {{ dados.weather.umidade }} </span> </p>
-        <p class="resultado-clima"> Vento: <span> {{ dados.weather.windSpeed }} </span> </p>
+        <p class="resultado-clima"> Umidade: <span> {{ dados.weather.umidade }}% </span> </p>
+        <p class="resultado-clima"> Vento: <span> {{ dados.weather.windSpeed }}km/h </span> </p>
       </div>
 
-      <div v-else-if="erro">
+      <div class="display-resultados" v-else-if="erro">
         <p class="resultado-clima"> Cidade: <span> Pendente </span> </p>
         <p class="resultado-clima"> Temperatura: <span> Pendente </span> </p>
         <p class="resultado-clima"> Umidade: <span> Pendente </span> </p>
         <p class="resultado-clima"> Vento: <span> Pendente </span> </p>
       </div>
          
-      </div>
+    </div>
+
   </div>
 </template>
