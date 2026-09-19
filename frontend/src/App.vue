@@ -1,6 +1,6 @@
 <script setup>
-  import { onMounted, ref } from 'vue';
-  import  L  from 'leaflet';
+  import { onMounted, ref, toRaw } from 'vue';
+  import L from 'leaflet';
 
   const cidade = ref('');
   const dados = ref(null);
@@ -20,22 +20,33 @@
       map.value = L.map(mapContainer.value).setView([0, 0], 1);
 
       L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+          maxZoom: 19,
+          attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
       }).addTo(map.value);
     }
   }
 
   // Atualiza a posicao do mapa - coordenadas como parametro
   function updateMap(lat, lon) {
-    // Mapa ja existe - apenas atualiza
     if(map.value !== null) {
-      map.value.setView([lat, lon], 15);
+      map.value.setView([lat, lon], 15); // Muda a visualizacao
+      setMarker(lat, lon); // Adiciona um marcador
     } else {
-      // Mapa nao existe, cria um novo
+      // Cria novo mapa
       createMap();
     }
-  
+  }
+
+  // Adiciona um marcador ao mapa
+  function setMarker(lat, lon) {
+    // Instanciar primeiro
+    const marker = L.marker([lat, lon]);
+
+    // Adicionar ao mapa depois - impede o marcador de 'flutuar' ao mudar o zoom
+    marker
+      .addTo(toRaw(map.value)) // Metodo 'toRaw' impede o Vue de tentar dinamizar o mapa ao mudar o zoom
+      .bindPopup(`<b>${dados.value.cidade}</b><br>Temperatura: ${dados.value.weather.temperatura}`)
+      .openPopup();
   }
   
   async function buscaClima() {
