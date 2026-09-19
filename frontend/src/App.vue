@@ -1,9 +1,42 @@
 <script setup>
-  import { ref } from 'vue';
+  import { onMounted, ref } from 'vue';
+  import  L  from 'leaflet';
 
   const cidade = ref('');
   const dados = ref(null);
   const erro = ref('');
+
+  const map = ref(null);
+  const mapContainer = ref(null);
+
+  // Garante que os itens HTML iniciem com a pagina
+  onMounted(() => {
+    createMap();
+  });
+
+  // Cria o mapa - de acordo com a documentacao do Leaflet
+  function createMap() {
+    if(mapContainer.value) {
+      map.value = L.map(mapContainer.value).setView([0, 0], 1);
+
+      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+      }).addTo(map.value);
+    }
+  }
+
+  // Atualiza a posicao do mapa - coordenadas como parametro
+  function updateMap(lat, lon) {
+    // Mapa ja existe - apenas atualiza
+    if(map.value !== null) {
+      map.value.setView([lat, lon], 15);
+    } else {
+      // Mapa nao existe, cria um novo
+      createMap();
+    }
+  
+  }
   
   async function buscaClima() {
     console.log(`Cidade pesquisada: ${cidade.value}`);
@@ -19,6 +52,9 @@
 
       // Armazena o response como JSON
       dados.value = await response.json();
+
+      // Atualiza o mapa com as coordenadas da consulta
+      updateMap(dados.value.latitude, dados.value.longitude);
 
     } catch(error) {
       dados.value = null;
@@ -64,6 +100,8 @@
       </div>
          
     </div>
+
+    <div ref="mapContainer" class="map-container"></div>
 
   </div>
 </template>
