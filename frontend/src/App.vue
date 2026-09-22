@@ -5,6 +5,7 @@
   const cidade = ref('');
   const dados = ref(null);
   const erro = ref('');
+  const sugestoes = ref([]);
 
   const map = ref(null);
   const mapContainer = ref(null);
@@ -74,6 +75,32 @@
     }
   }
 
+  // Busca cidades compativeis com o termo de consulta
+  async function buscarSugestoes() {
+    try {
+      // Manda requisicao HTTP ao Backend
+      const response = await fetch(`http://localhost:3000/api/cidades/${cidade.value}`);
+
+      // Tratamento de erro
+      if(!response.ok) {
+        throw new Error(`Erro de consulta: ${response.status}`);
+      }
+
+      // Armazena as cidades compativeis
+      sugestoes.value = await response.json();
+
+    } catch(error) {
+      sugestoes.value = [];
+      console.log(error.message);
+    }
+  }
+
+  // Define a cidade com base na selecao das compatibilidades
+  function selecionarCidade(item) {
+    cidade.value = item.name;
+    sugestoes.value = [];
+  }
+
 </script>
 
 <template>
@@ -82,13 +109,38 @@
     <p> Consulte o clima da cidade </p>
 
     <div class="busca">
+
+      <div class="campo-cidade">
+
       <input 
         class="digitarCidade" 
         id="inputCidade" 
         v-model="cidade" 
-        type="text" 
+        @input="buscarSugestoes"
+        type="text"
+        autocomplete="off"
         placeholder="Digite o nome de uma cidade"
       />
+
+      <div 
+        class="lista-cidade" 
+        v-if="sugestoes.length > 0"
+      >
+
+      <div 
+        class="cidade-item"
+        v-for="item in sugestoes"
+        :key = "item.id"
+        @click="selecionarCidade"
+      >
+
+      <strong>
+        {{ item.name }}
+      </strong>
+
+      </div>
+      </div>
+      </div>
 
       <button class="botao" @click="buscaClima"> Buscar cidade </button>
     </div>
