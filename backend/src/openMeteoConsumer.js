@@ -49,7 +49,9 @@ async function geocodingSugestoes(cidade) {
         // Retorna dados em JSON formatado
         return {
             id: local.id,
-            name: local.name
+            name: local.name,
+            country: local.country,
+            state: local.admin1
         }
     });
 
