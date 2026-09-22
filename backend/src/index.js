@@ -1,5 +1,5 @@
 // import { geocodingBusca } from "./openMeteoConsumer";
-const { geocodingBusca, weatherBusca } = require('./openMeteoConsumer');
+const { geocodingSugestoes, geocodingBusca, weatherBusca } = require('./openMeteoConsumer');
 
 const express = require('express');
 const cors = require('cors');
@@ -14,6 +14,26 @@ app.use(cors({
     methods: ['GET', 'POST', 'DELETE', 'UPDATE'],
     allowedHeaders: ['Content-Type', 'Authorization', 'Access-Control-Allow-Origin']
 }));
+
+app.get('/api/cidades/:cidade', async(req, res) => {
+    const { cidade } = req.params;
+
+    try{
+        // Condiciona o parametro de busca
+        if(!cidade || cidade.trim().length <= 3) {
+            return res.json([]);
+        }
+
+        // Recupera as cidades correspondentes
+        const cidades = await geocodingSugestoes(cidade);
+
+        res.json(cidades);
+
+    } catch(error) {
+        res.status(500).json({error: error.message});
+    }
+
+})
 
 // Parametros nomeados - capturam o seu segmento da requisicao -> :nome_parametro
 app.get('/api/weather/:cidade', async (req, res) => {
@@ -47,7 +67,6 @@ app.get('/api/weather/:cidade', async (req, res) => {
         res.status(500).json({error: error.message});
     }
 });
-
 
 
 app.listen(port, () => console.log("Servidor rodando na porta 3000"));
