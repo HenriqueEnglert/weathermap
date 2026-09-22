@@ -131,7 +131,7 @@
         class="cidade-item"
         v-for="item in sugestoes"
         :key = "item.id"
-        @click="selecionarCidade"
+        @click="selecionarCidade(item)"
       >
 
       <strong>
