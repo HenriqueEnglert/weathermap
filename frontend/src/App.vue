@@ -5,6 +5,7 @@
   const cidade = ref('');
   const dados = ref(null);
   const erro = ref('');
+  
   const sugestoes = ref([]);
 
   const map = ref(null);
@@ -135,7 +136,7 @@
       >
 
       <strong>
-        {{ item.name }}
+        {{ item.name }} - {{ item.country }} - {{ item.state }}
       </strong>
 
       </div>
