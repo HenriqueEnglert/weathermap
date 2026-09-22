@@ -7,6 +7,55 @@ const geocodingURI = "https://geocoding-api.open-meteo.com/v1/search";
 const weatherAPIURI = "https://api.open-meteo.com/v1/forecast";
 
 /**
+ * Busca sugestões de cidades com base no nome informado usando a API de Geocoding.
+ *
+ * @param {string} cidade - Nome ou termo de busca da cidade (mínimo de 4 caracteres).
+ * @returns {Promise<Array<{id: number, name: string}>>} Lista com até 10 sugestões contendo ID e nome, ou array vazio se a busca for inválida/sem resultados.
+ * @throws {Error} Lança uma exceção se a requisição HTTP retornar um status de erro.
+ */
+async function geocodingSugestoes(cidade) {
+
+    if(!cidade || cidade.trim().length <= 3) {
+        return [];
+    }
+
+    // Manipular a URI global
+    const URIBusca = new URL(geocodingURI);
+
+    // Parametros de busca
+    URIBusca.searchParams.append('name', cidade.trim());
+    URIBusca.searchParams.append('count', '10');
+    URIBusca.searchParams.append('language', 'pt');
+    URIBusca.searchParams.append('format', 'json');
+
+    // Consulta a API
+    const response = await fetch(URIBusca);
+
+    // Tratamento de Erro - problemas de consulta
+    if(!response.ok) {
+        throw new Error(`[ERRO] Erro ao pesquisar -> [DATALHES]: ${response.status}`);
+    }
+
+    // Converte a response em JSON
+    const dados = await response.json();
+
+    // Verifica se as informacoes nao sao nulas
+    if(!dados.results) {
+        return [];
+    }
+
+    // Itera sobre os objetos da response
+    return dados.results.map(local => {
+        // Retorna dados em JSON formatado
+        return {
+            id: local.id,
+            name: local.name
+        }
+    });
+
+}
+
+/**
  * Consulta coordenadas geograficas e fuso horario de uma cidade utilizando a API Open-Meteo.
  *
  * @param cidade - O nome da cidade a ser pesquisada (ex: "Sao Paulo" ou "Porto Alegre").
@@ -37,7 +86,6 @@ async function geocodingBusca(cidade) {
 
     // Tratamento de Erro - problemas de consulta
     if(!response.ok) {
-        // Adicionar um logger???
         throw new Error(`[ERRO]: Erro com a consulta -> [DETALHES]: ${response.status}`);
     }
 
@@ -104,6 +152,7 @@ async function weatherBusca(latitudeParam, longitudeParam) {
 }
 
 module.exports = {
+    geocodingSugestoes,
     geocodingBusca,
     weatherBusca
 };
