@@ -98,7 +98,7 @@
 
   // Define a cidade com base na selecao das compatibilidades
   function selecionarCidade(item) {
-    cidade.value = `${item.name},${item.country}`;
+    cidade.value = `${item.name},${item.state}`;
     sugestoes.value = [];
   }
 
