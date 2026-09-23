@@ -82,6 +82,8 @@ async function geocodingBusca(cidade) {
     // Parametros de busca
     URIBusca.searchParams.append("name", cidade);
     URIBusca.searchParams.append("count", "1");
+    URIBusca.searchParams.append('language', 'pt');
+    URIBusca.searchParams.append('format', 'json');
 
     // Consulta a API
     const response = await fetch(URIBusca);
