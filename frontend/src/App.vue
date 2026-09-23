@@ -47,7 +47,7 @@
     // Adicionar ao mapa depois - impede o marcador de 'flutuar' ao mudar o zoom
     marker
       .addTo(toRaw(map.value)) // Metodo 'toRaw' impede o Vue de tentar dinamizar o mapa ao mudar o zoom
-      .bindPopup(`<b>${dados.value.cidade}</b><br>Temperatura: ${dados.value.weather.temperatura}`)
+      .bindPopup(`<b>${dados.value.cidade}</b><br>Temperatura: ${dados.value.weather.temperatura}°C`)
       .openPopup();
   }
   
@@ -98,7 +98,7 @@
 
   // Define a cidade com base na selecao das compatibilidades
   function selecionarCidade(item) {
-    cidade.value = item.name;
+    cidade.value = `${item.name},${item.country}`;
     sugestoes.value = [];
   }
 
@@ -151,7 +151,7 @@
 
       <div class="display-resultados" v-if="dados">
         <p class="resultado-clima"> Cidade: <span> {{ dados.cidade }} </span> </p>
-        <p class="resultado-clima"> Temperatura: <span> {{ dados.weather.temperatura }} </span> </p>
+        <p class="resultado-clima"> Temperatura: <span> {{ dados.weather.temperatura }} °C </span> </p>
         <p class="resultado-clima"> Umidade: <span> {{ dados.weather.umidade }}% </span> </p>
         <p class="resultado-clima"> Vento: <span> {{ dados.weather.windSpeed }}km/h </span> </p>
       </div>
