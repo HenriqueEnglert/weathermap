@@ -1,10 +1,27 @@
 services:
+  db:
+    image: postgres:16-alpine
+    container_name: database
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var?lib?postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB: ${DB_NAME}
+
+
   backend:
     build: ./backend
     container_name: backend
     ports:
       - "3000:3000"
     restart: always
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@db:5432/weathermap
 
   frontend:
     build: ./frontend
@@ -14,3 +31,6 @@ services:
     restart: always
     depends_on:
       - backend
+
+volumes:
+  pgdata:
