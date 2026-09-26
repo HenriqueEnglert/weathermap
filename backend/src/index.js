@@ -50,6 +50,7 @@ app.get('/api/weather/:cidade', async (req, res) => {
         // Monta o objeto final combinando os dados
         const jsonResposta = {
             cidade: dadosCidade.name,
+            state: dadosCidade.state,
             country: dadosCidade.country,
             latitude: dadosCidade.latitude,
             longitude: dadosCidade.longitude,

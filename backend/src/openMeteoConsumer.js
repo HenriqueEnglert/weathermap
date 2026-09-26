@@ -106,6 +106,7 @@ async function geocodingBusca(cidade) {
         name: dadosGeocodificacao.results[0].name,
         latitude: dadosGeocodificacao.results[0].latitude,
         longitude: dadosGeocodificacao.results[0].longitude,
+        state: dadosGeocodificacao.results[0].admin1,
         country: dadosGeocodificacao.results[0].country
     }
 }
