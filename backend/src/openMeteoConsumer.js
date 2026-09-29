@@ -1,7 +1,3 @@
-//import { fetchWeatherApi } from 'openmeteo';
-
-const { fetchWeatherApi } = require('openmeteo');
-
 // URI da API Geocoding
 const geocodingURI = "https://geocoding-api.open-meteo.com/v1/search";
 const weatherAPIURI = "https://api.open-meteo.com/v1/forecast";
