@@ -54,7 +54,17 @@ async function gerarRelatorio() {
     try {
         client = await conectar();
     } catch(error) {
-        throw error
+        throw error;
+    }
+
+    const pesquisasTotais = await pesquisasTotais(client);
+    const pesquisasHoje = await pesquisasHoje(client);
+    const cidadeMaisConsultada = await cidadeMaisConsultada(client);
+
+    return {
+        pesquisasTotais: pesqTotais.total,
+        pesquisasHoje: pesqHoje.total,
+        cidadeMaisConsultada: cidadeMaisConsultada
     }
 
 }
