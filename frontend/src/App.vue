@@ -2,6 +2,8 @@
   import { onMounted, ref, toRaw } from 'vue';
   import L from 'leaflet';
 
+  const dadosDashboard = ref(null);
+
   const cidade = ref('');
   const dados = ref(null);
   const erro = ref('');
@@ -14,7 +16,29 @@
   // Garante que os itens HTML iniciem com a pagina
   onMounted(() => {
     createMap();
+    atualizaDashboard();
   });
+
+  async function atualizaDashboard() {
+    console.log('Buscando dados para o dashboard');
+
+    try {
+      // Requisicao HTTP ao backend
+      const response = await fetch('http://localhost:3000/api/dashboard');
+
+      // Tratamento de erro - evita quebra da pagina
+      if(!response.ok) {
+        throw new Error(`Erro ao atualizar o dashboard: ${response.status}`);
+      }
+
+      // Atualiza os dados do dashboard
+      dadosDashboard.value = await response.json();
+
+    } catch (error) {
+      dadosDashboard.value = null;
+      console.log(error.message);
+    }
+  }
 
   // Cria o mapa - de acordo com a documentacao do Leaflet
   function createMap() {
@@ -68,6 +92,8 @@
 
       // Atualiza o mapa com as coordenadas da consulta
       updateMap(dados.value.latitude, dados.value.longitude);
+
+      atualizaDashboard();
 
     } catch(error) {
       dados.value = null;
@@ -166,6 +192,12 @@
     </div>
 
     <div ref="mapContainer" class="map-container"></div>
+
+    <div class="dashboard" v-if="dadosDashboard">
+      <p> Pesquisas totais: <span> {{ dadosDashboard.pesquisasTotais }} </span> </p>
+      <p> Pesquisas hoje: <span> {{ dadosDashboard.pesquisasHoje }} </span> </p>
+      <p> Cidade mais consultada: <span> {{ dadosDashboard.cidadeMaisConsultada }} </span> </p>
+    </div>
 
   </div>
 </template>
