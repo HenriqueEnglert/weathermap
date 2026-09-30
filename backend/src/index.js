@@ -1,6 +1,6 @@
 // import { geocodingBusca } from "./openMeteoConsumer";
 const { geocodingSugestoes, geocodingBusca, weatherBusca } = require('./openMeteoConsumer');
-const { registrarPesquisa } = require('./db/dbConsumer');
+const { registrarPesquisa, gerarRelatorio } = require('./db/dbConsumer');
 
 const express = require('express');
 const cors = require('cors');
@@ -77,6 +77,18 @@ app.get('/api/weather/:cidade', async (req, res) => {
         };
 
         res.json(jsonResposta);
+    } catch(error) {
+        res.status(500).json({error: error.message});
+    }
+});
+
+app.get('/api/dashboard', async(req, res) => {
+    try {
+        const dadosDashboard = await gerarRelatorio();
+
+        console.log(dadosDashboard)
+
+        res.json(dadosDashboard);
     } catch(error) {
         res.status(500).json({error: error.message});
     }
