@@ -1,5 +1,6 @@
 // import { geocodingBusca } from "./openMeteoConsumer";
 const { geocodingSugestoes, geocodingBusca, weatherBusca } = require('./openMeteoConsumer');
+const { registrarPesquisa } = require('./db/dbConsumer');
 
 const express = require('express');
 const cors = require('cors');
@@ -44,8 +45,20 @@ app.get('/api/weather/:cidade', async (req, res) => {
         // Recupera dados da cidade
         const dadosCidade =  await geocodingBusca(cidade);
 
-        // Recupera dados do atuais do clima usando as coordenadas da cidade
+        // Recupera dados atuais do clima usando as coordenadas da cidade
         const dadosClima = await weatherBusca(dadosCidade.latitude, dadosCidade.longitude);
+
+        // Objeto com dados para insercao no DB
+        const jsonDB = {
+            cidade: dadosCidade.name,
+            state: dadosCidade.state,
+            country: dadosCidade.country,
+            latitude: dadosCidade.latitude,
+            longitude: dadosCidade.longitude
+        }
+
+        // Insere as informacoes da cidade ao DB
+        await registrarPesquisa(jsonDB);
 
         // Monta o objeto final combinando os dados
         const jsonResposta = {
