@@ -61,20 +61,40 @@ async function gerarRelatorio() {
 
 async function pesquisasTotais(client) {
     try {
-        const res = await client.query('SELECT COUNT(c.id) AS total FROM cidades_pesquisadas AS c;');
+        const response = await client.query('SELECT COUNT(c.id) AS total FROM cidades_pesquisadas AS c;');
         
-        return res.rows[0].total;
+        return Number(response.rows[0].total)
     } catch(error) {
         throw new Error(`Nao foi possivel executar a consulta. ${error.message}`);
     }
 }
 
 async function pesquisasHoje(client) {
+    try {
+        const response = await client.query('SELECT COUNT(c.id) AS total FROM cidades_pesquisadas AS c WHERE c.criado_em >= CURRENT_DATE;');
 
+        return Number(response.rows[0].total)
+    } catch(error) {
+        throw new Error(`Nao foi possivel executar a consulta. ${error.message}`);
+    }
 }
 
 async function cidadeMaisConsultada(client) {
+    try {
+        const response = await client.query('SELECT c.cidade, c.estado, c.pais, COUNT(c.id) AS qtd_pesquisas FROM cidades_pesquisadas AS c GROUP BY c.cidade, c.estado, c.pais ORDER BY qtd_pesquisas DESC LIMIT 1;');
 
+        if(response.rows.length === 0) {
+            return null
+        }
+
+        const resultado = response.rows[0];
+
+        resultado.qtd_pesquisas = Number(resultado.qtd_pesquisas);
+
+        return resultado
+    } catch(error) {
+        throw new Error(`Nao foi possivel executar a consulta. ${error.message}`);
+    }
 }
 
 module.exports = {
