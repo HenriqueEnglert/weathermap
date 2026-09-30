@@ -58,23 +58,32 @@ async function gerarRelatorio() {
         throw error;
     }
 
-    const pesquisasTotais = await pesquisasTotais(client);
-    const pesquisasHoje = await pesquisasHoje(client);
-    const cidadeMaisConsultada = await cidadeMaisConsultada(client);
+    try {
+        const pesqTotais = await pesquisasTotais(client);
+        const pesqHoje = await pesquisasHoje(client);
+        const cidadeMaisConsultas = await cidadeMaisConsultada(client);
 
-    return {
-        pesquisasTotais: pesqTotais.total,
-        pesquisasHoje: pesqHoje.total,
-        cidadeMaisConsultada: cidadeMaisConsultada
+        return {
+            pesquisasTotais: pesqTotais.total,
+            pesquisasHoje: pesqHoje.total,
+            cidadeMaisConsultada: cidadeMaisConsultas
+        }
+    } catch(error) {
+        throw new Error(`Erro ao gerar relatorio: ${error.message}`);
+    } finally {
+        client.end();
     }
-
 }
 
 async function pesquisasTotais(client) {
     try {
         const response = await client.query('SELECT COUNT(c.id) AS total FROM cidades_pesquisadas AS c;');
         
-        return Number(response.rows[0].total)
+        const resultado = response.rows[0];
+
+        resultado.total = Number(resultado.total);
+
+        return resultado
     } catch(error) {
         throw new Error(`Nao foi possivel executar a consulta. ${error.message}`);
     }
@@ -84,7 +93,11 @@ async function pesquisasHoje(client) {
     try {
         const response = await client.query('SELECT COUNT(c.id) AS total FROM cidades_pesquisadas AS c WHERE c.criado_em >= CURRENT_DATE;');
 
-        return Number(response.rows[0].total)
+        const resultado = response.rows[0];
+
+        resultado.total = Number(resultado.total);
+
+        return resultado
     } catch(error) {
         throw new Error(`Nao foi possivel executar a consulta. ${error.message}`);
     }
