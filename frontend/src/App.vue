@@ -194,9 +194,18 @@
     <div ref="mapContainer" class="map-container"></div>
 
     <div class="dashboard" v-if="dadosDashboard">
+
       <p> Pesquisas totais: <span> {{ dadosDashboard.pesquisasTotais }} </span> </p>
       <p> Pesquisas hoje: <span> {{ dadosDashboard.pesquisasHoje }} </span> </p>
-      <p> Cidade mais consultada: <span> {{ dadosDashboard.cidadeMaisConsultada }} </span> </p>
+      <p> Cidade mais consultada </p>
+
+      <div class="dasboard-cidade">
+        <p> Cidade: <span> {{ dadosDashboard.cidadeMaisConsultada.cidade }} </span> </p>
+        <p> Estado: <span> {{ dadosDashboard.cidadeMaisConsultada.estado }} </span> </p>
+        <p> Pais: <span> {{ dadosDashboard.cidadeMaisConsultada.pais }} </span> </p>
+        <p> Quantidade de pesquisas: <span> {{ dadosDashboard.cidadeMaisConsultada.qtd_pesquisas }} </span> </p>
+      </div>
+
     </div>
 
   </div>
