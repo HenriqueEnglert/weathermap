@@ -9,9 +9,11 @@ services:
       - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
     restart: always
     environment:
+      POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASS}
-      POSTGRES_DB: ${DB_NAME}
+      TZ: ${DB_TZ}
+      PGTZ: ${DB_PGTZ}
 
 
   backend:
