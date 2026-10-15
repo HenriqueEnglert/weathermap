@@ -34,12 +34,13 @@ h1 {
 .busca {
     display: flex;
     align-items: flex-start;
+    justify-content: center;
     gap: 20px;
     margin-top: 30px;
     padding: 25px;
     background: #ffffff;
     border-radius: 20px;
-    box-shadow: 0, 8px, 30px, rgba(30, 70, 120, 0.05);
+    box-shadow: 0 8px 30px rgba(30, 70, 120, 0.05);
 }
 
 .digitarCidade {
@@ -71,7 +72,7 @@ h1 {
 .botao:hover {
     background: #396389;
     transform: translateY(-2px);
-    box-shadow: 0, 8px, 30px, rgba(37, 99, 235, 0.25);
+    box-shadow: 0 8px 30px rgba(37, 99, 235, 0.25);
 }
 
 .lista-cidade {
@@ -84,7 +85,7 @@ h1 {
     background: #f8fafc;
     border: 1px solid #e2c2e8;
     border-radius: 12px;
-    box-shadow: 0, 10px, 30px, rgba(00, 00, 00, 0.12);
+    box-shadow: 0 10px 30px rgba(00, 00, 00, 0.12);
 }
 
 .cidade-item {
@@ -110,10 +111,11 @@ h1 {
     padding: 28px;
     background: #ffffff;
     border-radius: 18px;
-    box-shadow: 0, 8px, 30px, rgba(30, 70, 120, 0.08);
+    box-shadow: 0 8px 30px rgba(30, 70, 120, 0.08);
 }
 
 .resultado h2 {
+    justify-self: center;
     margin: 0 0 25px;
     font-size: 22px;
     color: #1e293b;
@@ -131,6 +133,9 @@ h1 {
 .map-container {
     height: 400px;
     width: 400px;
+    margin: 20px auto;
+    border-radius: 15px;
+    box-shadow: 0px 4px 12px rgba(23, 59, 103, 0.501);
 }
 
 .dashboard {
