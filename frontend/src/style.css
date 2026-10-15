@@ -139,5 +139,25 @@ h1 {
 }
 
 .dashboard {
-    background-color: beige;
+    margin-left: 15px;
+    border-radius: 15px;
+    background-color: rgb(150, 195, 209);
+}
+
+.dashboard > p {
+    margin-left: 5px;
+    font-size: 16px;
+    font-weight: 300;
+    color: #1e293b;
+}
+
+.dashboard-cidade {
+    margin-left: 20px;
+}
+
+.dashboard-cidade > p {
+    margin-left: 5px;
+    font-size: 13px;
+    font-weight: 300;
+    color: #17202f;
 }

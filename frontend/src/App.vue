@@ -199,7 +199,7 @@
       <p> Pesquisas hoje: <span> {{ dadosDashboard.pesquisasHoje }} </span> </p>
       <p> Cidade mais consultada </p>
 
-      <div class="dasboard-cidade" v-if="dadosDashboard.cidadeMaisConsultada">
+      <div class="dashboard-cidade" v-if="dadosDashboard.cidadeMaisConsultada">
         <p> Cidade: <span> {{ dadosDashboard.cidadeMaisConsultada.cidade }} </span> </p>
         <p> Estado: <span> {{ dadosDashboard.cidadeMaisConsultada.estado }} </span> </p>
         <p> Pais: <span> {{ dadosDashboard.cidadeMaisConsultada.pais }} </span> </p>
