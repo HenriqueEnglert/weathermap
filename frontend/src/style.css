@@ -139,25 +139,44 @@ h1 {
 }
 
 .dashboard {
-    margin-left: 15px;
-    border-radius: 15px;
-    background-color: rgb(150, 195, 209);
+    margin-top: 25px;
+    padding: 28px;
+    background: #ffffff;
+    border-radius: 18px;
+    box-shadow: 0 8px 30px rgba(30, 70, 120, 0.08);
 }
 
 .dashboard > p {
-    margin-left: 5px;
+    margin: 0 0 15px;
     font-size: 16px;
-    font-weight: 300;
+    font-weight: 600;
     color: #1e293b;
 }
 
+.dashboard span {
+    font-weight: 400;
+    color: #2563eb;
+}
+
 .dashboard-cidade {
-    margin-left: 20px;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+    padding: 20px;
+    background: #f8fafc;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
 }
 
 .dashboard-cidade > p {
-    margin-left: 5px;
-    font-size: 13px;
-    font-weight: 300;
-    color: #17202f;
+    margin: 0;
+    font-size: 14px;
+    font-weight: 500;
+    color: #64748b;
+}
+
+.dashboard-cidade span {
+    font-weight: 600;
+    color: #1e293b;
 }
