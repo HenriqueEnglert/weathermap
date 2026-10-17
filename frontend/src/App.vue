@@ -133,7 +133,7 @@
 <template>
   <div class="container">
     <h1> WeatherMap </h1>
-    <p> Consulte o clima da cidade </p>
+    <p> ☀️ Consulte o clima da cidade 🌧️ </p>
 
     <div class="busca">
 
@@ -176,17 +176,17 @@
       <h2> Clima </h2>
 
       <div class="display-resultados" v-if="dados">
-        <p class="resultado-clima"> Cidade: <span> {{ dados.cidade }} </span> </p>
-        <p class="resultado-clima"> Temperatura: <span> {{ dados.weather.temperatura }} °C </span> </p>
-        <p class="resultado-clima"> Umidade: <span> {{ dados.weather.umidade }}% </span> </p>
-        <p class="resultado-clima"> Vento: <span> {{ dados.weather.windSpeed }}km/h </span> </p>
+        <p class="resultado-clima"> 📍 Cidade: <span> {{ dados.cidade }} </span> </p>
+        <p class="resultado-clima"> 🌡️ Temperatura: <span> {{ dados.weather.temperatura }} °C </span> </p>
+        <p class="resultado-clima"> 🌫️ Umidade: <span> {{ dados.weather.umidade }}% </span> </p>
+        <p class="resultado-clima"> 🍃 Vento: <span> {{ dados.weather.windSpeed }}km/h </span> </p>
       </div>
 
       <div class="display-resultados" v-else-if="erro">
-        <p class="resultado-clima"> Cidade: <span> Pendente </span> </p>
-        <p class="resultado-clima"> Temperatura: <span> Pendente </span> </p>
-        <p class="resultado-clima"> Umidade: <span> Pendente </span> </p>
-        <p class="resultado-clima"> Vento: <span> Pendente </span> </p>
+        <p class="resultado-clima"> 📍 Cidade: <span> Pendente </span> </p>
+        <p class="resultado-clima"> 🌡️ Temperatura: <span> Pendente </span> </p>
+        <p class="resultado-clima"> 🌫️ Umidade: <span> Pendente </span> </p>
+        <p class="resultado-clima"> 🍃 Vento: <span> Pendente </span> </p>
       </div>
          
     </div>
@@ -195,14 +195,14 @@
 
     <div class="dashboard" v-if="dadosDashboard">
 
-      <p> Pesquisas totais: <span> {{ dadosDashboard.pesquisasTotais }} </span> </p>
-      <p> Pesquisas hoje: <span> {{ dadosDashboard.pesquisasHoje }} </span> </p>
+      <p> 📊 Pesquisas totais: <span> {{ dadosDashboard.pesquisasTotais }} </span> </p>
+      <p> 🔍 Pesquisas hoje: <span> {{ dadosDashboard.pesquisasHoje }} </span> </p>
       <p> Cidade mais consultada </p>
 
       <div class="dashboard-cidade" v-if="dadosDashboard.cidadeMaisConsultada">
-        <p> Cidade: <span> {{ dadosDashboard.cidadeMaisConsultada.cidade }} </span> </p>
-        <p> Estado: <span> {{ dadosDashboard.cidadeMaisConsultada.estado }} </span> </p>
-        <p> Pais: <span> {{ dadosDashboard.cidadeMaisConsultada.pais }} </span> </p>
+        <p> 📍 Cidade: <span> {{ dadosDashboard.cidadeMaisConsultada.cidade }} </span> </p>
+        <p> 🧭 Estado: <span> {{ dadosDashboard.cidadeMaisConsultada.estado }} </span> </p>
+        <p> 🌎 Pais: <span> {{ dadosDashboard.cidadeMaisConsultada.pais }} </span> </p>
         <p> Quantidade de pesquisas: <span> {{ dadosDashboard.cidadeMaisConsultada.qtd_pesquisas }} </span> </p>
       </div>
 

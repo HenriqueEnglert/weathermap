@@ -50,6 +50,12 @@ async function registrarPesquisa(pesquisa) {
     }
 }
 
+/**
+ * Gera um relatório estatístico das pesquisas de localização registradas no banco de dados.
+ *
+ * @returns {Promise<JSON>} Objeto contendo o total de pesquisas, pesquisas de hoje e a cidade mais consultada.
+ * @throws {Error} Se houver falha na conexão com o banco ou erro durante as consultas.
+ */
 async function gerarRelatorio() {
     let client;
     try {
