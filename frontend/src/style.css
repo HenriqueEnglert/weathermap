@@ -130,6 +130,11 @@ h1 {
     );
 }
 
+.display-resultados span {
+    font-weight: 600;
+    color: #1e293b;
+}
+
 .map-container {
     height: 400px;
     width: 400px;
