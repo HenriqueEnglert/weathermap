@@ -1,6 +1,6 @@
 // import { geocodingBusca } from "./openMeteoConsumer";
 const { geocodingSugestoes, geocodingBusca, weatherBusca } = require('./openMeteoConsumer');
-const { descricaoClimaBusca } = require('.descricoesClima');
+const { descricaoClimaBusca } = require('./descricoesClima');
 const { registrarPesquisa, gerarRelatorio } = require('./db/dbConsumer');
 
 const express = require('express');
