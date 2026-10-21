@@ -1,5 +1,6 @@
 // import { geocodingBusca } from "./openMeteoConsumer";
 const { geocodingSugestoes, geocodingBusca, weatherBusca } = require('./openMeteoConsumer');
+const { descricaoClimaBusca } = require('.descricoesClima');
 const { registrarPesquisa, gerarRelatorio } = require('./db/dbConsumer');
 
 const express = require('express');
@@ -60,6 +61,9 @@ app.get('/api/weather/:cidade', async (req, res) => {
         // Insere as informacoes da cidade ao DB
         await registrarPesquisa(jsonDB);
 
+        // Busca a descricao do clima com o codigo fornecido pela API
+        const descricaoClima = descricaoClimaBusca(dadosClima.weatherCode);
+
         // Monta o objeto final combinando os dados
         const jsonResposta = {
             cidade: dadosCidade.name,
@@ -72,7 +76,7 @@ app.get('/api/weather/:cidade', async (req, res) => {
                 sensacaoTermica: dadosClima.sensacaoTermica,
                 umidade: dadosClima.umidade,
                 windSpeed: dadosClima.windSpeed,
-                weatherCode: dadosClima.weatherCode
+                descricaoClima: descricaoClima
             }
         };
 
