@@ -180,6 +180,11 @@
         <p class="resultado-clima"> 🌡️ Temperatura: <span> {{ dados.weather.temperatura }} °C </span> </p>
         <p class="resultado-clima"> 🌫️ Umidade: <span> {{ dados.weather.umidade }}% </span> </p>
         <p class="resultado-clima"> 🍃 Vento: <span> {{ dados.weather.windSpeed }}km/h </span> </p>
+
+        <div class="descricao-clima">
+          <p class="resultado-clima"> Descrição Clima: <span> {{ dados.weather.descricaoClima }} </span></p>
+        </div>
+
       </div>
 
       <div class="display-resultados" v-else-if="erro">
@@ -187,6 +192,11 @@
         <p class="resultado-clima"> 🌡️ Temperatura: <span> Pendente </span> </p>
         <p class="resultado-clima"> 🌫️ Umidade: <span> Pendente </span> </p>
         <p class="resultado-clima"> 🍃 Vento: <span> Pendente </span> </p>
+
+        <div class="descricao-clima">
+          <p class="resultado-clima"> Descrição Clima: <span> Pendente </span></p>
+        </div>
+
       </div>
          
     </div>
