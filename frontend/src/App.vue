@@ -10,6 +10,9 @@
   
   const sugestoes = ref([]);
 
+  // Flag exibicao visual estado de carregamento - estado inicial previne informacoes
+  const estaCarregando = ref(null);
+
   const map = ref(null);
   const mapContainer = ref(null);
 
@@ -79,6 +82,8 @@
     console.log(`Cidade pesquisada: ${cidade.value}`);
 
     try {
+      estaCarregando.value = true;
+
       // Manda requisicao HTTP ao backend
       const response = await fetch(`http://localhost:3000/api/weather/${cidade.value}`);
 
@@ -99,6 +104,8 @@
       dados.value = null;
       erro.value = error.message;
       console.log(error.message);
+    } finally {
+      estaCarregando.value = false;
     }
   }
 
@@ -172,31 +179,37 @@
       <button class="botao" @click="buscaClima"> Buscar cidade </button>
     </div>
 
-    <div class="resultado">
-      <h2> Clima </h2>
-
-      <div class="display-resultados" v-if="dados">
-        <p class="resultado-clima"> 📍 Cidade: <span> {{ dados.cidade }} </span> </p>
-        <p class="resultado-clima"> 🌡️ Temperatura: <span> {{ dados.weather.temperatura }} °C </span> </p>
-        <p class="resultado-clima"> 🌫️ Umidade: <span> {{ dados.weather.umidade }}% </span> </p>
-        <p class="resultado-clima"> 🍃 Vento: <span> {{ dados.weather.windSpeed }}km/h </span> </p>
-
-        <div class="descricao-clima">
-          <p class="resultado-clima"> Descrição Clima: <span> {{ dados.weather.descricaoClima }} </span></p>
-        </div>
-
+    <div class="resultado" v-if="estaCarregando != null">
+      <div v-if="estaCarregando">
+        <h2> Carregando... </h2>
       </div>
 
-      <div class="display-resultados" v-else-if="erro">
-        <p class="resultado-clima"> 📍 Cidade: <span> Pendente </span> </p>
-        <p class="resultado-clima"> 🌡️ Temperatura: <span> Pendente </span> </p>
-        <p class="resultado-clima"> 🌫️ Umidade: <span> Pendente </span> </p>
-        <p class="resultado-clima"> 🍃 Vento: <span> Pendente </span> </p>
+      <div v-if="!estaCarregando">
+        <h2> Clima </h2>
+
+        <div class="display-resultados" v-if="dados">
+          <p class="resultado-clima"> 📍 Cidade: <span> {{ dados.cidade }} </span> </p>
+          <p class="resultado-clima"> 🌡️ Temperatura: <span> {{ dados.weather.temperatura }} °C </span> </p>
+          <p class="resultado-clima"> 🌫️ Umidade: <span> {{ dados.weather.umidade }}% </span> </p>
+          <p class="resultado-clima"> 🍃 Vento: <span> {{ dados.weather.windSpeed }}km/h </span> </p>
+
+          <div class="descricao-clima">
+            <p class="resultado-clima"> Descrição Clima: <span> {{ dados.weather.descricaoClima }} </span></p>
+          </div>
+
+        </div>
+
+        <div class="display-resultados" v-else-if="erro">
+          <p class="resultado-clima"> 📍 Cidade: <span> Pendente </span> </p>
+          <p class="resultado-clima"> 🌡️ Temperatura: <span> Pendente </span> </p>
+          <p class="resultado-clima"> 🌫️ Umidade: <span> Pendente </span> </p>
+          <p class="resultado-clima"> 🍃 Vento: <span> Pendente </span> </p>
 
         <div class="descricao-clima">
           <p class="resultado-clima"> Descrição Clima: <span> Pendente </span></p>
         </div>
 
+        </div>
       </div>
          
     </div>
