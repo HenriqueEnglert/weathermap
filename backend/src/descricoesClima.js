@@ -31,7 +31,9 @@ const descricoes = {
 }
 
 async function descricaoClimaBusca(codigo) {
-    return descricoes.toString(codigo)
+    // Converte inteiro para String para conseguir consultar a chave no JSON
+    codigo = String(codigo);
+    return descricoes[codigo]
 }
 
 module.exports = {

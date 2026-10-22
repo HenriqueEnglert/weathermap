@@ -62,7 +62,7 @@ app.get('/api/weather/:cidade', async (req, res) => {
         await registrarPesquisa(jsonDB);
 
         // Busca a descricao do clima com o codigo fornecido pela API
-        const descricaoClima = descricaoClimaBusca(dadosClima.weatherCode);
+        const descricaoClima = await descricaoClimaBusca(dadosClima.weatherCode);
 
         // Monta o objeto final combinando os dados
         const jsonResposta = {
