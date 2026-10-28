@@ -17,6 +17,7 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization', 'Access-Control-Allow-Origin']
 }));
 
+// Retorno de sugestoes de pesquisa
 app.get('/api/cidades/:cidade', async(req, res) => {
     const { cidade } = req.params;
 
@@ -27,15 +28,21 @@ app.get('/api/cidades/:cidade', async(req, res) => {
         }
 
         // Recupera as cidades correspondentes
-        const cidades = await geocodingSugestoes(cidade);
+        const arrayCidades = await geocodingSugestoes(cidade);
 
-        res.json(cidades);
+        if(!arrayCidades) {
+            res.status(500).json({
+                error: 'Nao foi realizado carregamento das cidades pela API'
+            });
+        }
+
+        res.json(arrayCidades);
 
     } catch(error) {
         res.status(500).json({error: error.message});
     }
 
-})
+});
 
 // Parametros nomeados - capturam o seu segmento da requisicao -> :nome_parametro
 app.get('/api/weather/:cidade', async (req, res) => {
@@ -86,6 +93,53 @@ app.get('/api/weather/:cidade', async (req, res) => {
     }
 });
 
+// Realiza consulta de clima utilizando as coordenadas recebidas como parametro
+app.get('/api/weather.coords/:cidade/:state/:country/:lat/:lon', async (req, res) => {
+    // Recupera os dados da cidade e suas coordenadas
+    const { cidade, state, country, lat, lon } = req.params;
+
+    try {
+        // Recupera dados atuais do clima usando as coordenadas da cidade
+        const dadosClima = await weatherBusca(lat, lon);
+
+        // Objeto com dados para insercao no DB
+        const jsonDB = {
+            cidade: cidade,
+            state: state,
+            country: country,
+            latitude: lat,
+            longitude: lon
+        }
+
+        // Busca a descricao do clima com o codigo fornecido pela API
+        const descricaoClima = await descricaoClimaBusca(dadosClima.weatherCode);
+
+        // Insere as informacoes da cidade ao DB
+        await registrarPesquisa(jsonDB);
+
+        // Monta o objeto final combinando os dados
+        const jsonResposta = {
+            cidade: cidade,
+            state: state,
+            country: country,
+            latitude: lat,
+            longitude: lon,
+            weather: {
+                temperatura: dadosClima.temperatura,
+                sensacaoTermica: dadosClima.sensacaoTermica,
+                umidade: dadosClima.umidade,
+                windSpeed: dadosClima.windSpeed,
+                descricaoClima: descricaoClima
+            }
+        };
+
+        res.json(jsonResposta);
+    } catch(error) {
+        res.status(500).json({error: error.message});
+    }
+});
+
+// Realiza consulta ao DB e retorna dados atualizados para o dashboard
 app.get('/api/dashboard', async(req, res) => {
     try {
         const dadosDashboard = await gerarRelatorio();
