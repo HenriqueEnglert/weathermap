@@ -47,7 +47,9 @@ async function geocodingSugestoes(cidade) {
             id: local.id,
             name: local.name,
             country: local.country,
-            state: local.admin1
+            state: local.admin1,
+            latitude: local.latitude,
+            longitude: local.longitude
         }
     });
 
