@@ -4,8 +4,8 @@
 
   const dadosDashboard = ref(null);
 
-  const cidade = ref('');
-  const dados = ref(null);
+  const cidade = ref(''); // Objeto JSON contendo dados necessarios para identificacao e pesquisa de uma cidade
+  const dados = ref(null); // Dados originados da consulta de clima ao backend
   const erro = ref('');
   
   const sugestoes = ref([]);
@@ -78,14 +78,22 @@
       .openPopup();
   }
   
+  // Busca o clima atual da cidade compativel com o termo de busca
   async function buscaClima() {
-    console.log(`Cidade pesquisada: ${cidade.value}`);
+    console.log(`Cidade pesquisada: ${cidade.value.name}`);
 
     try {
       estaCarregando.value = true;
 
       // Manda requisicao HTTP ao backend
-      const response = await fetch(`http://localhost:3000/api/weather/${cidade.value}`);
+      const response = await fetch(
+        `http://localhost:3000/api/weather.coords/` 
+        + `${cidade.value.name}/` 
+        + `${cidade.value.state}/` 
+        + `${cidade.value.country}/` 
+        + `${cidade.value.latitude}/` 
+        + `${cidade.value.longitude}`
+      );
 
       // Tratamento de erro - evita quebrar a pagina apos erro de requisicao
       if(!response.ok) {
@@ -105,6 +113,7 @@
       erro.value = error.message;
       console.log(error.message);
     } finally {
+      cidade.value = '';
       estaCarregando.value = false;
     }
   }
@@ -131,7 +140,9 @@
 
   // Define a cidade com base na selecao das compatibilidades
   function selecionarCidade(item) {
-    cidade.value = `${item.name},${item.state}`;
+    // Associa a referencia de cidade ao item selecionado
+    cidade.value = item;
+
     sugestoes.value = [];
   }
 
