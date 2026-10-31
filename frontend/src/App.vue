@@ -10,6 +10,8 @@
   
   const sugestoes = ref([]);
 
+  const mostrarAlerta = ref(false);
+
   // Flag exibicao visual estado de carregamento - estado inicial previne informacoes
   const estaCarregando = ref(null);
 
@@ -82,6 +84,12 @@
   async function buscaClima() {
     console.log(`Cidade pesquisada: ${cidade.value.name}`);
 
+    // Confere se a cidade e um JSON valido para consulta - PROVENINETE DA SELECAO DE UMA SUGESTAO
+    if(!validaCidadeJSON()) {
+      mostrarAlerta.value = true;
+      return;
+    }
+
     try {
       estaCarregando.value = true;
 
@@ -143,7 +151,18 @@
     // Associa a referencia de cidade ao item selecionado
     cidade.value = item;
 
+    // Apaga o alerta mostrado sobre o input
+    mostrarAlerta.value = false;
+
     sugestoes.value = [];
+  }
+
+  // Executa a verificacao da referencia Cidade - verifica se e um objeto JSON
+  function validaCidadeJSON() {
+    const ehObjeto = typeof cidade.value === 'object';
+    const naoEhNull = cidade.value != null;
+
+    return ehObjeto && naoEhNull;
   }
 
 </script>
@@ -154,40 +173,39 @@
     <p> ☀️ Consulte o clima da cidade 🌧️ </p>
 
     <div class="busca">
-
-      <div class="campo-cidade">
-
-      <input 
-        class="digitarCidade" 
-        id="inputCidade" 
-        v-model="cidade" 
-        @input="buscarSugestoes"
-        type="text"
-        autocomplete="off"
-        placeholder="Digite o nome de uma cidade"
-      />
-
-      <div 
-        class="lista-cidade" 
-        v-if="sugestoes.length > 0"
-      >
-
-      <div 
-        class="cidade-item"
-        v-for="item in sugestoes"
-        :key = "item.id"
-        @click="selecionarCidade(item)"
-      >
-
-      <strong>
-        {{ item.name }} - {{ item.country }} - {{ item.state }}
-      </strong>
-
-      </div>
-      </div>
+      
+      <div class="alertaCampoVazio" v-if="mostrarAlerta">
+        <p>Selecione uma sugestao valida para a pesquisa!</p>
       </div>
 
-      <button class="botao" @click="buscaClima"> Buscar cidade </button>
+      <div class="busca-linha">
+        <div class="campo-cidade">
+          <input 
+            class="digitarCidade" 
+            id="inputCidade" 
+            v-model="cidade" 
+            @input="buscarSugestoes"
+            type="text"
+            autocomplete="off"
+            placeholder="Digite o nome de uma cidade"
+          />
+
+          <div class="lista-cidade" v-if="sugestoes.length > 0">
+            <div 
+              class="cidade-item"
+              v-for="item in sugestoes"
+              :key="item.id"
+              @click="selecionarCidade(item)"
+            >
+              <strong>
+                - {{ item.name }} - {{ item.country }} - {{ item.state }}
+              </strong>
+            </div>
+          </div>
+        </div>
+
+        <button class="botao" @click="buscaClima"> Buscar cidade </button>
+      </div>
     </div>
 
     <div class="resultado" v-if="estaCarregando != null">
