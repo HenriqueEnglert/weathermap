@@ -4,6 +4,8 @@
 
   const dadosDashboard = ref(null);
 
+  const cidadeCampo = ref(''); // Valor usado para consultar o backend ao buscar as sugestoes - Funciona com o hidden input
+
   const cidade = ref(''); // Objeto JSON contendo dados necessarios para identificacao e pesquisa de uma cidade
   const dados = ref(null); // Dados originados da consulta de clima ao backend
   const erro = ref('');
@@ -130,7 +132,7 @@
   async function buscarSugestoes() {
     try {
       // Manda requisicao HTTP ao Backend
-      const response = await fetch(`http://localhost:3000/api/cidades/${cidade.value}`);
+      const response = await fetch(`http://localhost:3000/api/cidades/${cidadeCampo.value}`);
 
       // Tratamento de erro
       if(!response.ok) {
@@ -150,6 +152,8 @@
   function selecionarCidade(item) {
     // Associa a referencia de cidade ao item selecionado
     cidade.value = item;
+
+    cidadeCampo.value = item.name;
 
     // Apaga o alerta mostrado sobre o input
     mostrarAlerta.value = false;
@@ -183,9 +187,18 @@
           <input 
             class="digitarCidade" 
             id="inputCidade" 
-            v-model="cidade" 
+            v-model="cidadeCampo" 
             @input="buscarSugestoes"
             type="text"
+            autocomplete="off"
+            placeholder="Digite o nome de uma cidade"
+          />
+
+          <input 
+            class="digitarCidade" 
+            id="idCidadeHidden" 
+            v-model="cidade" 
+            type="hidden"
             autocomplete="off"
             placeholder="Digite o nome de uma cidade"
           />
