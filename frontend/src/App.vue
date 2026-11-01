@@ -130,6 +130,11 @@
 
   // Busca cidades compativeis com o termo de consulta
   async function buscarSugestoes() {
+    if(cidadeCampo.value === '') {
+      mostrarAlerta.value = true;
+      return;
+    }
+
     try {
       // Manda requisicao HTTP ao Backend
       const response = await fetch(`http://localhost:3000/api/cidades/${cidadeCampo.value}`);
